@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Dict, Tuple, Optional
+from pydantic_core import ValidationError
 from settings import Settings
 import http
 import requests
@@ -85,7 +86,12 @@ class Response:
 if __name__ == "__main__":
     logger = logging.getLogger("MyBitLink")
     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-    settings = Settings()
+    try:
+        settings = Settings()
+    except ValidationError:
+        logger.error('Поле "TOKEN" отсутствует в файле .env')
+        sys.exit()
+
     token = settings.TOKEN.get_secret_value()
     user_input: str = input("Введите полное название сайта." "Например: Google.com\n")
     headers: Dict[str, ...] = {
