@@ -25,7 +25,7 @@ class Response:
     def get_shorten_link(self) -> Optional[str]:
         """Получение короткой ссылки"""
         response = requests.post(
-            self.urls["shorten"], data=data.format(user_input), headers=headers
+            self.urls["shorten"], data=self.data.format(user_input), headers=self.headers
         )
         link = response.json().get("link", None)
 
@@ -47,8 +47,8 @@ class Response:
 
         response = requests.get(
             self.urls["summary_clicks"].format(shorten_link),
-            headers=headers,
-            params=params,
+            headers=self.headers,
+            params=self.params,
         )
         if response.status_code == http.HTTPStatus.BAD_REQUEST:
             logger.error("[-] Что то пошло не так")
